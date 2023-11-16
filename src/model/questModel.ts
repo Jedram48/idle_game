@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { Quest } from "../types/types";
+import { Quest } from "../types/types.js";
 
 const questSchema = new Schema<Quest>({
   name: {

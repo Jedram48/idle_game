@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { HydratedDocument } from 'mongoose';
 import bcrypt from "bcrypt";
-import { user_model as UserModel } from '../model/userModel';
-import { User } from '../types/types';
+import { user_model as UserModel } from '../model/userModel.js';
+import { User } from '../types/types.js';
 
 export const registerUser = async (req: Request, res: Response) => {
   const { name, email, password, country } = req.body;
