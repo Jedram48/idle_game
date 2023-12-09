@@ -20,7 +20,7 @@ public class Enemy : MonoBehaviour {
     }
 
     public void Damage() {
-        Hp -= 5;
+        Hp -= statistics.clickDamages();
         healthBar.fillAmount = (float)Hp / (float)maxHp;
     }
 
