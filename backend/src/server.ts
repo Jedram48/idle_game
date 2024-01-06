@@ -15,6 +15,10 @@ app.use(cors());
 app.use("/auth", authRoutes);
 app.use("/quests", questRoutes);
 
+app.get("/test", (req, res) => {
+  res.send("<h1>It's working 🤗</h1>");
+});
+
 app.listen(process.env.SERVER_PORT, () => {
   console.log(`Connected to server on port ${process.env.SERVER_PORT}`);
 });
