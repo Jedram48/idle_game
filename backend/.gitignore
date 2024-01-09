@@ -4,6 +4,7 @@ node_modules
 package-lock.json
 dist/
 .env
+.DS_Store
 ./.env
 /.env
 src/config/private_key.pem
