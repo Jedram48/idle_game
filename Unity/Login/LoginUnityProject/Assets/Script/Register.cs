@@ -1,27 +1,53 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 public class Register : MonoBehaviour {
 
   private const string PASSWORD_REGEX = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{5,20})";
-  private const string EMAIL_REGEX = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}";
-  [SerializeField] private string createEndpoint = "http://127.0.0.1:8080/auth/";
+  private const string EMAIL_REGEX = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+  [SerializeField] private string createEndpoint = "http://3.79.166.123:8080/auth/";
+  // [SerializeField] private string createEndpoint = "http://localhost:8080/auth/";
   [SerializeField] private TextMeshProUGUI alertText;
+  [SerializeField] private TextMeshProUGUI passwordError;
+  [SerializeField] private TextMeshProUGUI emailError;
   [SerializeField] private TMP_InputField emailInputField;
   [SerializeField] private TMP_InputField passwordInputField;
-  [SerializeField] private TMP_InputField nameInputField;
+  [SerializeField] private TMP_InputField usernameInputField;
   [SerializeField] private Button registerButton;
-  [SerializeField] private TMP_Dropdown countryDropdown;
-  public ClickToChangeScene clickToChangeScene;
+  private ClickToChangeScene clickToChangeScene;
+
+  [SerializeField] private TMP_Dropdown dropdown;
+  [SerializeField] private TextMeshProUGUI dropdownValue;
+
+  void Start() {
+    dropdown.options.Clear();
+    List<string> items = new List<string>();
+    items.Add("Poland");
+    items.Add("Germany");
+    items.Add("Israel");
+    items.Add("China");
+
+    foreach(var item in items) {
+      dropdown.options.Add(new TMP_Dropdown.OptionData() { text = item });
+    }
+    dropdownValue.text = "Select your country";
+    SetDropdownListHeight();
+    dropdown.onValueChanged.AddListener(delegate { OnDropdownValueChanged(); });
+  }
+
+  private void OnDropdownValueChanged() {
+    int selectedIndex = dropdown.value;
+    dropdownValue.text = dropdown.options[selectedIndex].text;
+    Debug.Log(dropdownValue.text);
+  }
 
   public void OnCreateClick() {
-    alertText.text = "Creating account...";
     ActivateButtons(false);
     StartCoroutine(TryCreate());
   }
@@ -31,35 +57,38 @@ public class Register : MonoBehaviour {
   }
 
   private IEnumerator TryCreate() {
-    string name = nameInputField.text;
+    string username = usernameInputField.text;
     string email = emailInputField.text;
     string password = passwordInputField.text;
-    // dropdown input
+    string country = dropdownValue.text; 
 
-    if(name == "") {
-      alertText.text = "Invalid name";
+    if(username == "") {
+      CleanInputs();
       ActivateButtons(true);
       yield break;
     }
 
-    if(email.Length < 3 || email.Length > 24) {
-      alertText.text = "Invalid email";
+    if(email.Length < 6 || email.Length > 24 || !Regex.IsMatch(email, EMAIL_REGEX)) {
+      Debug.Log("Not valid email");
+      emailError.text = "Invalid email format";
+      CleanInputs();
       ActivateButtons(true);
       yield break;
     }
 
-    if(!Regex.IsMatch(password, PASSWORD_REGEX) || !Regex.IsMatch(email, EMAIL_REGEX)) {
-      Debug.Log("Regexy niepoprawne :(");
-      alertText.text = "Invalid credentials";
+    if(!Regex.IsMatch(password, PASSWORD_REGEX)) {
+      Debug.Log("Not valid password");
+      passwordError.text = "At least 1 small and big letter and at least 1 number are required";
+      CleanInputs();
       ActivateButtons(true);
       yield break;
     }
 
     RegisterData requestData = new RegisterData();
-    requestData.name = name;
+    requestData.username = username;
     requestData.email = email;
     requestData.password = password;
-    requestData.country = "USA";
+    requestData.country = country;
 
     string jsonData = JsonUtility.ToJson(requestData);
     var request = new UnityWebRequest(createEndpoint, "POST");
@@ -73,8 +102,10 @@ public class Register : MonoBehaviour {
     float startTime = 0.0f;
     while (!handler.isDone) {
       startTime += Time.deltaTime;
-      if(startTime > 10.0f) { // if it's longer than 10 seconds
+      if(startTime > 15.0f) { // if it's longer than 10 seconds
         Debug.Log("Niepomyślna rejestracja...");
+        CleanInputs();
+        ActivateButtons(true);
         break;
       }
       yield return null;
@@ -82,18 +113,18 @@ public class Register : MonoBehaviour {
     Debug.Log($"{request.result}");
 
     if(request.result == UnityWebRequest.Result.Success) {
-      Response response = JsonUtility.FromJson<Response>(request.downloadHandler.text);
-      Debug.Log($"{response}");
+      RegisterResponse response = JsonUtility.FromJson<RegisterResponse>(request.downloadHandler.text);
+      Debug.Log($"{response.data}");
       int responseCode = (int)request.responseCode;
       Debug.Log("Kod odpowiedzi HTTP: " + responseCode);
       if(responseCode >= 200) { // register success
         ActivateButtons(false);
-        alertText.text = "Welcome";
+        CleanInputs();
         SceneManager.LoadScene("LoginScene"); // zmiana sceny na scenę logowania
       }
     } else {
       Debug.LogError($"Błąd zapytania POST: {request.error}");
-      Response response = JsonUtility.FromJson<Response>(request.downloadHandler.text);
+      RegisterResponse response = JsonUtility.FromJson<RegisterResponse>(request.downloadHandler.text);
       Debug.LogError($"Message from server: {response.message}");
       if(request.responseCode == 401 || request.responseCode == 400) {
         alertText.text = "Invalid registration";
@@ -101,6 +132,7 @@ public class Register : MonoBehaviour {
       if(request.responseCode >= 500) {
         alertText.text = "Server error";
       }
+      CleanInputs();
       ActivateButtons(true);
     }
 
@@ -109,5 +141,19 @@ public class Register : MonoBehaviour {
 
   private void ActivateButtons(bool toggle) {
     registerButton.interactable = toggle;
+  }
+
+  private void SetDropdownListHeight() {
+    float itemHeight = 60f;
+    int visibleItems = Mathf.Min(dropdown.options.Count, 5);
+    float dropdownHeight = visibleItems * itemHeight;
+    RectTransform dropdownTransform = dropdown.template.GetComponent<RectTransform>();
+    dropdownTransform.sizeDelta = new Vector2(dropdownTransform.sizeDelta.x, dropdownHeight);
+  }
+
+  private void CleanInputs() {
+    usernameInputField.text = "";
+    emailInputField.text = "";
+    passwordInputField.text = "";    
   }
 }

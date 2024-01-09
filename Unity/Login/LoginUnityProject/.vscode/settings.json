@@ -51,5 +51,7 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "LoginUnityProject.sln"
+    "dotnet.defaultSolution": "LoginUnityProject.sln",
+    "julia.environmentPath": "/Users/bartiq/Desktop/Studia/sem5/Zespolowe/Unity/Login/LoginUnityProject",
+    "cmake.configureOnOpen": false
 }
