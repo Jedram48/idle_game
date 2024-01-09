@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import { Request } from "express";
 
 export enum QuestType {
   EASY = "EASY",
@@ -8,7 +9,7 @@ export enum QuestType {
 }
 
 export interface User {
-  name: string,
+  username: string,
   email: string,
   password: string, 
   country?: string,
@@ -22,4 +23,20 @@ export interface Quest {
 
 export type Score = {
   userId: Types.ObjectId,
+}
+
+export interface MyRequest extends Request {
+  userId: string
+  token: string
+}
+
+export interface UserToken {
+  userId: string,
+  username: string,
+}
+
+export interface Verification {
+  valid: boolean,
+  expired?: boolean,
+  decoded: UserToken | null,
 }
