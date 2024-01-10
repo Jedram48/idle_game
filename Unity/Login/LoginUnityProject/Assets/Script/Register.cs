@@ -22,6 +22,8 @@ public class Register : MonoBehaviour {
   [SerializeField] private Button registerButton;
   private ClickToChangeScene clickToChangeScene;
 
+  private Transition_Loader transition_Loader;
+
   [SerializeField] private TMP_Dropdown dropdown;
   [SerializeField] private TextMeshProUGUI dropdownValue;
 
@@ -53,7 +55,8 @@ public class Register : MonoBehaviour {
   }
 
   public void OnLinkClick() {
-    clickToChangeScene.onSceneChange("LoginScene");
+    // clickToChangeScene.onSceneChange("LoginScene");
+    transition_Loader.LoadNextScene();
   }
 
   private IEnumerator TryCreate() {
@@ -120,7 +123,8 @@ public class Register : MonoBehaviour {
       if(responseCode >= 200) { // register success
         ActivateButtons(false);
         CleanInputs();
-        SceneManager.LoadScene("LoginScene"); // zmiana sceny na scenę logowania
+        transition_Loader.LoadNextScene(); // zmiana sceny na scenę logowania
+        // SceneManager.LoadScene("LoginScene"); 
       }
     } else {
       Debug.LogError($"Błąd zapytania POST: {request.error}");

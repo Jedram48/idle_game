@@ -17,6 +17,10 @@ public class Login : MonoBehaviour {
   [SerializeField] private TMP_InputField emailInputField;
   [SerializeField] private TMP_InputField passwordInputField;
   public ClickToChangeScene clickToChangeScene;
+  private string accessTokenTag = "ACCESS_TOKEN";
+  private string accessTokenExpiration = "AccessTokenExpiration";
+  private string refreshTokenTag = "REFRESH_TOKEN";
+  private string refreshTokenExpiration = "RefreshTokenExpiration";
 
   public void OnLoginClick() {
     ActivateButtons(false);
@@ -75,6 +79,7 @@ public class Login : MonoBehaviour {
       LoginResponse response = JsonUtility.FromJson<LoginResponse>(request.downloadHandler.text);
       Debug.Log($"{response.accessToken}");
       Debug.Log($"{response.refreshToken}");
+      SetPrefs(response.accessToken, response.refreshToken);
       
       int responseCode = (int)request.responseCode;
       Debug.Log("Kod odpowiedzi HTTP: " + responseCode);
@@ -112,4 +117,10 @@ public class Login : MonoBehaviour {
     loginErrorText.text = "Invalid login data";
   }
 
+  private void SetPrefs(string accessToken, string refreshToken) {
+    PlayerPrefs.SetString(accessTokenTag, accessToken);
+    PlayerPrefs.SetString(accessTokenExpiration, System.DateTime.Now.ToString());
+    PlayerPrefs.SetString(refreshTokenTag, refreshToken);
+    PlayerPrefs.SetString(refreshTokenExpiration, System.DateTime.Now.ToString());
+  }
 }

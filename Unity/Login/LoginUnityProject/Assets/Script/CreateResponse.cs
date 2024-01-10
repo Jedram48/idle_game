@@ -36,3 +36,11 @@ public class LoginResponse {
     public GameAccount data;
 }
 
+[System.Serializable]
+public class AuthorizeResponse {
+    public string error;
+    public string message;
+    public string accessToken;
+    public string username;
+}
+
