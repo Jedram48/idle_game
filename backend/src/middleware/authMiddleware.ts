@@ -22,17 +22,17 @@ export const verifyToken = (req: MyRequest, res: Response, next: NextFunction) =
         const newAccessToken = signJWT(refreshTokenResponse.decoded, {
           expiresIn: "1h"
         });
-        req.userId = refreshTokenResponse.decoded.userId;
+        req.username = refreshTokenResponse.decoded.username;
         req.token = newAccessToken;
         return next();
       }
     } else { // user has valid accessToken
-      req.userId = response.decoded.userId;
+      req.username = response.decoded.username;
       req.token = bearerToken;  
       return next();
     }
   } else {
-    res.status(403).json({
+    return res.status(403).json({
       message: "Invalid request"
     });
   }

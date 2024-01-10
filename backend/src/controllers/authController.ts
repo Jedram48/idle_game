@@ -81,13 +81,16 @@ export const loginUser = async (req: Request, res: Response) => {
 
 export const authorizeUser = async (req: MyRequest, res: Response) => {
   const token = req.token;
-  if(token) {
+  const username = req.username;
+  if(token && username) {
     return res.status(200).json({
-      message: "Authorized"
+      message: "Authorized",
+      accessToken: token,
+      username,
     });
   } else {
     return res.status(403).json({
-      message: "Not authorized"
+      error: "Not authorized"
     });
   }
 }

@@ -26,7 +26,7 @@ export type Score = {
 }
 
 export interface MyRequest extends Request {
-  userId: string
+  username: string
   token: string
 }
 
