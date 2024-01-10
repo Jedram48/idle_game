@@ -2,11 +2,12 @@ import { Request, Response } from 'express';
 import { HydratedDocument } from 'mongoose';
 import bcrypt from "bcrypt";
 import { user_model as UserModel } from '../model/userModel.js';
-import { User } from '../types/types.js';
+import { MyRequest, User, UserToken } from '../types/types.js';
+import { signJWT, signRefreshToken } from '../config/jwt.js';
 
 export const registerUser = async (req: Request, res: Response) => {
-  const { name, email, password, country } = req.body;
-  if(!name || !email || !password) {
+  const { username, email, password, country } = req.body;
+  if(!username || !email || !password) {
     return res.status(400).json({
       message: "Invalid register data - please add all the fields"
     });
@@ -22,17 +23,15 @@ export const registerUser = async (req: Request, res: Response) => {
   hashPassword = await bcrypt.hash(password, 10);
   // Save new user to database
   const newUser: HydratedDocument<User> = await UserModel.create({
-    name,
+    username,
     email,
     password: hashPassword,
     country: country ? country : null,
   });
-  console.log(newUser);
 
   if(newUser) {
     return res.status(201).json({
-      userId: newUser._id,
-      email: newUser.email
+      username: newUser.username
     });
   } else {
     return res.status(400).json({
@@ -43,28 +42,59 @@ export const registerUser = async (req: Request, res: Response) => {
 
 export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  console.log(email);
-  console.log(password);
-  if(!email || !password) return res.status(400).json({ message: "Email and password are required" });
+  if(!email || !password) return res.status(400).json({ error: "Email and password are required" });
   const user: HydratedDocument<User> = await UserModel.findOne({ email });
 
   if(!user) {
     console.log("Nie znaleziono usera o takim emailu...");
     return res.status(401).json({
-      message: "Invalid login data"
+      error: "Invalid login data"
     });
   }
   // Compare passwords
   let passwordMatch: boolean;
   passwordMatch = await bcrypt.compare(password, user.password);
-  if(passwordMatch) {
+
+  if(!passwordMatch) {
+    return res.status(401).json({
+      error: "Authentication failed"
+    });
+  }
+
+  const payload: UserToken = {
+    userId: (user._id).toString(),
+    username: user.username,
+  };
+  const accessToken: string = signJWT(payload, {
+    expiresIn: "1h"
+  });
+  const refreshToken: string = signRefreshToken(payload, {
+    expiresIn: "3d"
+  });
+
+  return res.status(200).json({
+    accessToken,
+    refreshToken,
+    username: user.username,
+  });
+}
+
+export const authorizeUser = async (req: MyRequest, res: Response) => {
+  const token = req.token;
+  const username = req.username;
+  if(token && username) {
     return res.status(200).json({
-      userId: user._id,
+      message: "Authorized",
+      accessToken: token,
+      username,
     });
   } else {
-    return res.sendStatus(401);
+    return res.status(403).json({
+      error: "Not authorized"
+    });
   }
 }
+
 
 export const logoutUser = async (req: Request, res: Response) => {
 

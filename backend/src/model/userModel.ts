@@ -2,9 +2,9 @@ import { Schema, model } from "mongoose";
 import { User } from "../types/types.js";
 
 const userSchema = new Schema<User>({
-  name: {
+  username: {
     type: String,
-    required: [true, "Please add a name"]
+    required: [true, "Please add a username"]
   },
   email: {
     type: String,

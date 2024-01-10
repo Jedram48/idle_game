@@ -3,3 +3,9 @@ node_modules
 /dist
 package-lock.json
 dist/
+.env
+.DS_Store
+./.env
+/.env
+src/config/private_key.pem
+src/config/public_key.pem
