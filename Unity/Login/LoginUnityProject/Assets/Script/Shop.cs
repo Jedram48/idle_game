@@ -11,6 +11,7 @@ public class Shop : MonoBehaviour
     [SerializeField] SpriteRenderer obj;
     [SerializeField] RectTransform iconImage;
     [SerializeField] ObjectType objType;
+    [SerializeField] ShopPrices shopPrices;
 
     enum ObjectType{ helmet, boots, shield, armor, weapon } 
     LocalDatabase localDatabase;
@@ -56,38 +57,46 @@ public class Shop : MonoBehaviour
     {
         if (i < list.Count)
         {
-            obj.sprite = list[i];
-            i++;
-
+            int price = shopPrices.getPrice((int)objType + 3);
             PlayerData data = localDatabase.LoadData();
-            switch (objType)
-            {
-                case ObjectType.helmet:
-                    data.helmet = i;
-                    break;
-                case ObjectType.boots:
-                    data.boots = i;
-                    break;
-                case ObjectType.shield:
-                    data.shield = i;
-                    break;
-                case ObjectType.armor:
-                    data.armor = i;
-                    break;
-                case ObjectType.weapon:
-                    data.weapon = i;
-                    break;
-            }
-            localDatabase.SaveData(data);
 
-            if (i == list.Count)
+            if (price <= data.score)
             {
-                gameObject.SetActive(false);
+                obj.sprite = list[i];
+                i++;
+
+                data.score -= price;
+
+                switch (objType)
+                {
+                    case ObjectType.helmet:
+                        data.helmet = i;
+                        break;
+                    case ObjectType.boots:
+                        data.boots = i;
+                        break;
+                    case ObjectType.shield:
+                        data.shield = i;
+                        break;
+                    case ObjectType.armor:
+                        data.armor = i;
+                        break;
+                    case ObjectType.weapon:
+                        data.weapon = i;
+                        break;
+                }
+                localDatabase.SaveData(data);
+
+                if (i == list.Count)
+                {
+                    gameObject.SetActive(false);
+                }
+                else
+                {
+                    image.sprite = list[i];
+                }
+                shopPrices.updatePrice(); 
             }
-            else
-            {
-                image.sprite = list[i];
-            }   
         }
     }
 }
