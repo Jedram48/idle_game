@@ -76,16 +76,20 @@ export const loginUser = async (req: Request, res: Response) => {
     accessToken,
     refreshToken,
     username: user.username,
+    userId: user._id.toString(),
   });
 }
 
 export const authorizeUser = async (req: MyRequest, res: Response) => {
   const token = req.token;
   const username = req.username;
+  const userId = req.userId;
+
   if(token && username) {
     return res.status(200).json({
       message: "Authorized",
       accessToken: token,
+      userId,
       username,
     });
   } else {
@@ -95,7 +99,22 @@ export const authorizeUser = async (req: MyRequest, res: Response) => {
   }
 }
 
-
-export const logoutUser = async (req: Request, res: Response) => {
-
+export const logoutUser = async (req: MyRequest, res: Response) => {
+  const userId = req.userId;
+  if(!userId) {
+    return res.status(400).json({
+      error: "Logout not succeeded"
+    });
+  }
+  const user: HydratedDocument<User> = await UserModel.findOne({ _id: userId });
+  if(!user) {
+    return res.status(400).json({
+      error: "Logout not succeeded"
+    });
+  }
+  if(user) {
+    return res.status(200).json({
+      message: "Successfully logged out from app",
+    });
+  }
 }

@@ -5,7 +5,6 @@ import { verifyRefreshToken } from '../config/jwt.js';
 
 export const verifyToken = (req: MyRequest, res: Response, next: NextFunction) => {
   const bearerHeader = req.headers["authorization"];
-  console.log(bearerHeader);
 
   if(typeof bearerHeader !== "undefined") {
     const bearerToken = bearerHeader.split(" ")[1];
@@ -19,21 +18,21 @@ export const verifyToken = (req: MyRequest, res: Response, next: NextFunction) =
           error: "Not authorized"
         });
       } else { // Create new accessToken if refreshToken is valid
-        const newAccessToken = signJWT(refreshTokenResponse.decoded, {
-          expiresIn: "1h"
-        });
+        const newAccessToken = signJWT(refreshTokenResponse.decoded, {});
+        req.userId = refreshTokenResponse.decoded.userId;
         req.username = refreshTokenResponse.decoded.username;
         req.token = newAccessToken;
         return next();
       }
     } else { // user has valid accessToken
+      req.userId = response.decoded.userId;
       req.username = response.decoded.username;
       req.token = bearerToken;  
       return next();
     }
   } else {
     return res.status(403).json({
-      message: "Invalid request"
+      error: "Invalid request"
     });
   }
 }
