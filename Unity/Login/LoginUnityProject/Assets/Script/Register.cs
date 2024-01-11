@@ -60,6 +60,7 @@ public class Register : MonoBehaviour {
   }
 
   private IEnumerator TryCreate() {
+    transition_Loader = new Transition_Loader();
     string username = usernameInputField.text;
     string email = emailInputField.text;
     string password = passwordInputField.text;
@@ -117,14 +118,12 @@ public class Register : MonoBehaviour {
 
     if(request.result == UnityWebRequest.Result.Success) {
       RegisterResponse response = JsonUtility.FromJson<RegisterResponse>(request.downloadHandler.text);
-      Debug.Log($"{response.data}");
       int responseCode = (int)request.responseCode;
       Debug.Log("Kod odpowiedzi HTTP: " + responseCode);
       if(responseCode >= 200) { // register success
         ActivateButtons(false);
         CleanInputs();
-        transition_Loader.LoadNextScene(); // zmiana sceny na scenę logowania
-        // SceneManager.LoadScene("LoginScene"); 
+        SceneManager.LoadScene("LoginScene"); 
       }
     } else {
       Debug.LogError($"Błąd zapytania POST: {request.error}");

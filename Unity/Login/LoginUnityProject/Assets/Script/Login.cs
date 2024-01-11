@@ -9,8 +9,8 @@ using System.Text.RegularExpressions;
 public class Login : MonoBehaviour {
   private const string PASSWORD_REGEX = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{5,20})";
   private const string EMAIL_REGEX = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-  [SerializeField] private string loginEndpoint = "http://3.79.166.123:8080/auth/login/";
-  // [SerializeField] private string loginEndpoint = "http://localhost:8000/auth/login/";
+  private string loginEndpoint = "http://3.79.166.123:8080/auth/login/";
+  // private string loginEndpoint = "http://localhost:8080/auth/login/";
   [SerializeField] private TextMeshProUGUI loginErrorText;
   [SerializeField] private TextMeshProUGUI alertText;
   [SerializeField] private Button loginButton;
@@ -21,6 +21,8 @@ public class Login : MonoBehaviour {
   private string accessTokenExpiration = "AccessTokenExpiration";
   private string refreshTokenTag = "REFRESH_TOKEN";
   private string refreshTokenExpiration = "RefreshTokenExpiration";
+  private string usernameTag = "Username";
+  private string userIdTag = "User_Id";
 
   public void OnLoginClick() {
     ActivateButtons(false);
@@ -77,9 +79,7 @@ public class Login : MonoBehaviour {
 
     if(request.result == UnityWebRequest.Result.Success) {
       LoginResponse response = JsonUtility.FromJson<LoginResponse>(request.downloadHandler.text);
-      Debug.Log($"{response.accessToken}");
-      Debug.Log($"{response.refreshToken}");
-      SetPrefs(response.accessToken, response.refreshToken);
+      SetPrefs(response.accessToken, response.refreshToken, response.data.username, response.data.userId);
       
       int responseCode = (int)request.responseCode;
       Debug.Log("Kod odpowiedzi HTTP: " + responseCode);
@@ -117,10 +117,12 @@ public class Login : MonoBehaviour {
     loginErrorText.text = "Invalid login data";
   }
 
-  private void SetPrefs(string accessToken, string refreshToken) {
+  private void SetPrefs(string accessToken, string refreshToken, string username, string userId) {
     PlayerPrefs.SetString(accessTokenTag, accessToken);
     PlayerPrefs.SetString(accessTokenExpiration, System.DateTime.Now.ToString());
     PlayerPrefs.SetString(refreshTokenTag, refreshToken);
     PlayerPrefs.SetString(refreshTokenExpiration, System.DateTime.Now.ToString());
+    PlayerPrefs.SetString(usernameTag, username);
+    PlayerPrefs.SetString(userIdTag, userId);
   }
 }

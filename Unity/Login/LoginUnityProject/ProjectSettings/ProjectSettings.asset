@@ -141,10 +141,7 @@ PlayerSettings:
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
   bundleVersion: 1.0
-  preloadedAssets:
-  - {fileID: -1474374383183351044, guid: 807443cea7098d44384650a1acbb5067, type: 2}
-  - {fileID: 11400000, guid: 44091caa6050f5a40a74a98f97524e1a, type: 2}
-  - {fileID: 11400000, guid: c05e4e01aef39364c8d2c3509532a1ff, type: 2}
+  preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -168,7 +165,7 @@ PlayerSettings:
     Android: com.DefaultCompany.ClickerGame
     Lumin: com.DefaultCompany.com.unity.template.mobile2D
     Standalone: com.DefaultCompany.Clicker-Game
-    iPhone: com.DefaultCompany.com.unity.template.mobile2D
+    iPhone: com.DefaultCompany.Clicker-Game
     tvOS: com.DefaultCompany.com.unity.template.mobile2D
   buildNumber:
     Standalone: 0
@@ -921,4 +918,4 @@ PlayerSettings:
   hmiLoadingImage: {fileID: 0}
   platformRequiresReadableAssets: 0
   virtualTexturingSupportEnabled: 0
-  insecureHttpOption: 0
+  insecureHttpOption: 2

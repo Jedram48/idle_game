@@ -41,6 +41,13 @@ public class AuthorizeResponse {
     public string error;
     public string message;
     public string accessToken;
+    public string userId;
     public string username;
+}
+
+[System.Serializable]
+public class LogoutResponse {
+    public string error;
+    public string message;
 }
 
