@@ -76,7 +76,7 @@ Material:
     m_Colors:
     - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
     - _Color: {r: 0.1972134, g: 0.8679245, b: 0.15966538, a: 1}
-    - _FaceColor: {r: 0.048881013, g: 0.0039215684, b: 1, a: 1}
+    - _FaceColor: {r: 0.3962264, g: 0.041249342, b: 0, a: 1}
     - _MaskEdgeColor: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _UnderlayColor: {r: 0, g: 0, b: 0, a: 0.5}
