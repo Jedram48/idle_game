@@ -25,7 +25,8 @@ public class MainMenu : MonoBehaviour {
   }
 
   public void OnPlayButtonClick() {
-    transition_Loader.LoadNextScene();
+    // transition_Loader.LoadNextScene();
+    SceneManager.LoadScene("Level 3");
   }
 
   private IEnumerator LogoutUser() {

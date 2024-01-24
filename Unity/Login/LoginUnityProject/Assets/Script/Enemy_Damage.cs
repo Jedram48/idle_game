@@ -36,13 +36,13 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        // Hp -= Time.deltaTime * statistics.attackDamage();
+        Hp -= Time.deltaTime * statistics.attackDamage();
         // healthBar.fillAmount = (float)Hp / (float)maxHp;
 
         if (Hp <= 0)
         {
-            anim.SetInteger("state", 4); // Change State to Death
-            anim_player.SetInteger("state", 0); // Change Player State to Idle
+            // anim.SetInteger("state", 4); // Change State to Death
+            // anim_player.SetInteger("state", 0); // Change Player State to Idle
             PlayerData data = localDatabase.LoadData();
             int tmp = data.score;
             tmp += money;
