@@ -26,6 +26,7 @@ public class PasueMenu : MonoBehaviour
     }
     public void buttonQuit()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene("MenuScene");
     }
 

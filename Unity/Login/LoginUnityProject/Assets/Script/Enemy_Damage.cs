@@ -27,6 +27,9 @@ public class Enemy : MonoBehaviour
     public void Damage()
     {
         Hp -= statistics.clickDamages();
+        if (Hp <= 1) {
+            Hp = 1;
+        }
     }
 
     public void OnDestroy()
