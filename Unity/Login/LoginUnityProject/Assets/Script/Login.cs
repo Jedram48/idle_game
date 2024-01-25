@@ -9,8 +9,8 @@ using System.Text.RegularExpressions;
 public class Login : MonoBehaviour {
   private const string PASSWORD_REGEX = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{5,20})";
   private const string EMAIL_REGEX = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-  private string loginEndpoint = "http://3.79.166.123:8080/auth/login/";
-  // private string loginEndpoint = "http://localhost:8080/auth/login/";
+  // private string loginEndpoint = "http://3.79.166.123:8080/auth/login/";
+  private string loginEndpoint = "http://3.79.105.64:8080/auth/login/";
   [SerializeField] private TextMeshProUGUI loginErrorText;
   [SerializeField] private TextMeshProUGUI alertText;
   [SerializeField] private Button loginButton;

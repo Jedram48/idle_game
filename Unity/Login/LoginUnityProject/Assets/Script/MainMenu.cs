@@ -11,7 +11,8 @@ public class MainMenu : MonoBehaviour {
   [SerializeField] private Button logoutButton; 
   [SerializeField] private Button playButton;
   [SerializeField] private TextMeshProUGUI menuErrorText;
-  private string logoutEndpoint = "http://3.79.166.123:8080/auth/logout/";
+  // private string logoutEndpoint = "http://3.79.166.123:8080/auth/logout/";
+  private string logoutEndpoint = "http://3.79.105.64:8080/auth/logout/";
   // private string logoutEndpoint = "http://localhost:8080/auth/logout/";
   private Transition_Loader transition_Loader;
   private TokenOrganizer tokenOrganizer;
