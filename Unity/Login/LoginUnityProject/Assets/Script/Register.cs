@@ -11,8 +11,8 @@ public class Register : MonoBehaviour {
 
   private const string PASSWORD_REGEX = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{5,20})";
   private const string EMAIL_REGEX = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-  [SerializeField] private string createEndpoint = "http://3.79.166.123:8080/auth/";
-  // [SerializeField] private string createEndpoint = "http://localhost:8080/auth/";
+  // [SerializeField] private string createEndpoint = "http://3.79.166.123:8080/auth/";
+  private string createEndpoint = "http://3.79.105.64:8080/auth/";
   [SerializeField] private TextMeshProUGUI alertText;
   [SerializeField] private TextMeshProUGUI passwordError;
   [SerializeField] private TextMeshProUGUI emailError;

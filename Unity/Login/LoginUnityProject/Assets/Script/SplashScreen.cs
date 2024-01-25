@@ -10,8 +10,8 @@ public class SplashScreen : MonoBehaviour {
   private string accessTokenTag = "ACCESS_TOKEN";
   private string accessTokenExpiration = "AccessTokenExpiration";
   private string refreshTokenTag = "REFRESH_TOKEN";
-  private string authorizeEndpoint = "http://3.79.166.123:8080/auth/verify/";
-  // private string authorizeEndpoint = "http://localhost:8080/auth/verify/";
+  // private string authorizeEndpoint = "http://3.79.166.123:8080/auth/verify/";
+  private string authorizeEndpoint = "http://3.79.105.64:8080/auth/verify/";
   private TokenOrganizer tokenOrganizer;
 
   void Start() {
